@@ -1,0 +1,2 @@
+# finsim
+Simulate financial transactions
