@@ -112,7 +112,7 @@ class portfolio:
         if acct.label == i: return acct
       if type(i) is type(int()):
         if acct.code == i: return acct
-    raise CompanyAccountError('Account %s not found in %s' % (i, self.__class__.__name__))
+    raise PortfolioAccountError('Account %s not found in %s' % (i, self.__class__.__name__))
 
   def __iter__(self):
     for acct_type in self.accounts.keys():
@@ -176,7 +176,7 @@ class portfolio:
 
   def receive_payment(self, revenue, amount, total=None):
     self.accounts['Assets']['Cash'].increase(amount)
-    if total == None: total = amonunt
+    if total == None: total = amount
     if total > amount:
       self.accounts['Assets']['Accounts Receivable'].increase(total-amount)
     self.accounts['Revenues'][revenue].increase(total)
