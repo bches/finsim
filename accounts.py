@@ -65,7 +65,7 @@ def accounting_print(x):
   return ''
   
   
-  class adjusting_entry:
+class adjusting_entry:
   def __init__(self, debit_account, credit_account):
     self.debit_account = debit_account
     self.credit_account = credit_account
