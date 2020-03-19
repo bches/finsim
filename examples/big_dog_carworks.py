@@ -60,6 +60,39 @@ BigDog.borrow_expense(expense='Fuel Expense', amount=700)
 # transaction 10: pay $200 dividend
 BigDog.allocate_dividends(200)
 
+# Trial Balance Adjustments
+BigDog.adjust_unearned_revenue(revenue='Repair', amount=300,
+                               description='To adjust for unearned revenue.')
+
+BigDog.add_expense_category(name='Insurance', code=650)
+BigDog.adjust_prepaid_asset(asset='Prepaid Insurance', expense='Insurance', 
+                            amount=200,
+                            description='To adjust for the use of one month of pre-paid insurance')
+
+BigDog.add_expense_category(name='Equipment Dep.', code=680)
+BigDog.add_liability_category(name='Acc. Equipment Dep.', code=240)
+BigDog.adjust_depreciate_ppe(asset='Equipment', amount=25,
+                             description='To adjust for one month of depreciation on the equipment')
+
+BigDog.add_expense_category(name='Truck Dep.', code=690)
+BigDog.add_liability_category(name='Acc. Truck Dep.', code=250)
+BigDog.adjust_depreciate_ppe(asset='Truck', amount=100,
+                             description='To adjust for one month of depreciation on the truck')
+
+BigDog.adjust_accrued_revenue(revenue='Repair', amount=400,
+                               description='To adjust for accrued revenue')
+
+BigDog.add_expense_category(name='Interest Expense', code=660)
+BigDog.add_liability_category(name='Interest Payable', code=220)
+BigDog.adjust_accrued_expenses(expense='Interest', amount=18,
+                               description='To adjust for accrued interest; $6000 x 4% x 28/365 = $18.41 (rounded to the nearest dollar)')
+
+BigDog.add_expense_category(name='Income Tax Expense', code=670)
+BigDog.add_liability_category(name='Income Tax Payable', code=230)
+BigDog.adjust_accrued_expenses(expense='Income Tax', amount=500,
+                               description='To adjust for January accrued income tax')
+
+
 if __name__ == '__main__':
     print(BigDog)
     print()
