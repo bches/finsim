@@ -1,4 +1,4 @@
-from accounting import portfolio
+from ..accounting.portfolio import portfolio
 
 # The Big Dog Carworks example comes from the Introduction to Financial
 # Accounting book, which is available at:
