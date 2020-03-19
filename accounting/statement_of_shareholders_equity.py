@@ -1,4 +1,4 @@
-from financial_statement import financial_statement
+from ..accounting.financial_statement import financial_statement
 
 class statement_of_shareholders_equity(financial_statement):
     def __init__(self, co, periodicity, timestamp):
@@ -16,8 +16,8 @@ class statement_of_shareholders_equity(financial_statement):
             self.opening_balance = {'Share Capital':0, 'Retained Earnings':0, 'Total Equity':0}
         else:
             assert type(previous_statement) is type(self), "Previous statement must be %s" % type(self)
-        for each in ['Share Capital', 'Retained Earnings', 'Total Equity']:
-            self.opening_balance[each] = previous_statement[each]
+            for each in ['Share Capital', 'Retained Earnings', 'Total Equity']:
+                self.opening_balance[each] = previous_statement[each]
         self.ending_balance['Share Capital'] = self.co.accounts['Equity']['Share Capital']()
         self.share_capital_raised = self.ending_balance['Share Capital'] - self.opening_balance['Share Capital']
         self.dividends = self.co.accounts['Equity']['Dividends']()
