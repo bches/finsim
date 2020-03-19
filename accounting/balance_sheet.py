@@ -1,4 +1,5 @@
 from ..accounting.financial_statement import financial_statement
+from ..accounting.account import accounting_print
 
 class balance_sheet(financial_statement):
     def __init__(self, co, periodicity, timestamp):
@@ -38,12 +39,13 @@ if __name__ == '__main__':
     from ..accounting.income_statement import income_statement
     from ..accounting.statement_of_shareholders_equity import statement_of_shareholders_equity
     from ..accounting.balance_sheet import balance_sheet
+    from ..examples.big_dog_carworks import BigDog
     
     statements = {}
     
     statements['income'] = income_statement(BigDog, 'Monthly', 
                                             datetime(2001, 2, 3, 4, 5))
-    
+    print(statements['income'])
     statements['equity'] = statement_of_shareholders_equity(BigDog, 'Monthly',
                                                             datetime(2001, 2, 3, 4, 5))
     statements['equity'](net_income=statements['income'].net_income)
