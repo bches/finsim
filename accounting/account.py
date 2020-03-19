@@ -4,14 +4,15 @@ class account:
         self.code = code
         self.activity = activity
         self._cr = [0]
-        self._dr = [0]   
+        self._dr = [0]
 
     def __repr__(self):
-        return '{:>{width}} : {}\n{}\n{:{prec}}|{:{prec}}\n'.format(self.label,
-                                                                    self.code, '-'*21,
-                                                                    sum(self._dr),
-                                                                    sum(self._cr),
-                                                                    width=10,prec=10)
+        return '{:>{width}} : {}\n\
+        {}\n{:{prec}}|{:{prec}}\n'.format(self.label,
+                                          self.code, '-'*21,
+                                          sum(self._dr),
+                                          sum(self._cr),
+                                          width=10, prec=10)
 
     def debit(self, amount):
         assert amount >= 0, "Debit amount must be >= 0"
@@ -21,6 +22,7 @@ class account:
         assert amount >= 0, "Credit amount must be >= 0"
         self._cr += [amount]
 
+        
 class asset_account(account):
     def __call__(self):
         return sum(self._dr) - sum(self._cr)
@@ -34,11 +36,14 @@ class asset_account(account):
     def balance(self):
         return self(), 0
 
+    
 class dividends_account(asset_account):
     pass
 
+
 class expenses_account(asset_account):
     pass
+
 
 class liabilities_account(account):
     def __call__(self):
@@ -53,8 +58,10 @@ class liabilities_account(account):
     def balance(self):
         return 0, self()
 
+
 class equity_account(liabilities_account):
     pass
+
 
 def accounting_print(x):
     if x < 0: return f'({-1*x})'
@@ -76,13 +83,14 @@ class adjusting_entry:
         self.credit_account.credit(amount)
 
     def __repr__(self):
-        s = '{:20}{:>10}{:>10}\n{:20}{:>10}\n     {:20}{:>15}\n{}'.format(self.__class__.__name__,
-                                                                          'Dr','Cr',
-                                                                          self.debit_account.label, 
-                                                                          self.amount,
-                                                                          self.credit_account.label, 
-                                                                          self.amount,
-                                                                          self.description)
+        s = '{:20}{:>10}{:>10}\n\
+        {:20}{:>10}\n     {:20}{:>15}\n{}'.format(self.__class__.__name__,
+                                                  'Dr','Cr',
+                                                  self.debit_account.label,
+                                                  self.amount,
+                                                  self.credit_account.label,
+                                                  self.amount,
+                                                  self.description)
         return s
 
   
