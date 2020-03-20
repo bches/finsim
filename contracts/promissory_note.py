@@ -1,13 +1,11 @@
-import bad_debt
+from ..contracts.bad_debt import bad_debt
 
 class promissory_note(bad_debt):
     '''A promissory note is a short-term loan (less than a year)'''
     def __init__(self, payee, payer, amount, interest_rate, term):
-        contract.__init__(self, payee, payer, amount)
-        assert 'Interest Receivable' in self.payee,
-        'Payee needs an Interest Receivable account'
-        assert 'Interest Revenue' in self.payee,
-        'Payee needs Interest Revenue account'
+        bad_debt.__init__(self, payee, payer, amount)
+        assert 'Interest Receivable' in self.payee, 'Payee needs an Interest Receivable account'
+        assert 'Interest Revenue' in self.payee, 'Payee needs Interest Revenue account'
         self.interest_rate = interest_rate
         self.term = term
 
@@ -31,4 +29,6 @@ class promissory_note(bad_debt):
 if __name__ == '__main__':
     from ..examples.big_dog_carworks import BigDog
     
-    dut = promissory_note(payee=BigDog, payer=None, amount=5000)
+    dut = promissory_note(payee=BigDog, payer=None,
+                          amount=5000, interest_rate=0.001,
+                          term=2)
