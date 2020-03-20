@@ -1,6 +1,6 @@
 from ..accounting.account import account, asset_account, liabilities_account
 from ..accounting.account import equity_account, dividends_account
-from ..accounting.account import expenses_account
+from ..accounting.account import expenses_account, adjusting_entry
 
 
 class PortfolioAccountError(Exception):
@@ -30,12 +30,19 @@ class portfolio:
       if type(i) is type(int()):
         if acct.code == i: return acct
     raise PortfolioAccountError('Account %s not found in %s' % (i, self.__class__.__name__))
-
+  
   def __iter__(self):
     for acct_type in self.accounts.keys():
       for acct in self.accounts[acct_type].keys():
         yield self.accounts[acct_type][acct]
 
+  def __contains__(self, acct):
+    try:
+      self[acct]
+    except PortfolioAccountError:
+      return False
+    return True
+        
   def add_revenue_category(self, name, code):
     assert name not in self.accounts['Revenues'].keys(), "That revenue account already exists"
     assert code not in self.all_codes, "That code is already being used"
@@ -155,5 +162,9 @@ class portfolio:
 
 
 if __name__ == '__main__':
-  pass
+  from ..examples.big_dog_carworks import BigDog
+
+  assert 'Cash' in BigDog, "Could not find Cash account in BigDog"
+
+  
   
