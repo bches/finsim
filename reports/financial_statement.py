@@ -1,5 +1,5 @@
 class financial_statement:
-    '''Virtual base class for the other financial statements
+    '''Virtual base class for the other financial statements'''
     def __init__(self, co, periodicity, timestamp):
         self.co = co
         self.statement = 'Financial Statement'

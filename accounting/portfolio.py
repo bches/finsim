@@ -1,6 +1,7 @@
 from ..accounting.account import account, asset_account, liabilities_account
 from ..accounting.account import equity_account, dividends_account
-from ..accounting.account import expenses_account, adjusting_entry
+from ..accounting.account import expenses_account
+from ..accounting.adjusting_entry import adjusting_entry
 
 
 class PortfolioAccountError(Exception):
