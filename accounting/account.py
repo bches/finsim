@@ -1,3 +1,7 @@
+class InsufficientFundsError(Exception):
+    pass
+
+
 class account:
     def __init__(self, label, code, activity=None):
         self.label = label
@@ -37,6 +41,17 @@ class asset_account(account):
         return self(), 0
 
 
+class cash_account(asset_account):
+    def __init__(self, code):
+        asset_account.__init__(self, label='Cash', code=code)
+    
+    def credit(self, amount):
+        assert amount >= 0, "Credit amount must be >= 0"
+        if amount > self():
+            raise InsufficientFundsError('Insufficient Funds at %s')
+        self._cr += [amount]
+
+
 class dividends_account(asset_account):
     pass
 
@@ -72,3 +87,15 @@ if __name__ == '__main__':
     print()
     print('balance:', cash.balance())
     assert cash() == 2700, 'Cash not debited correctly'
+
+    cash = cash_account(code=101)
+    cash.debit(2000)
+    print(cash)
+    print()
+    print('cash() =', cash())
+    print()
+    print('balance:', cash.balance())
+    try:
+        cash.credit(2700)
+    except InsufficientFundsError:
+        print('Correctly caught overdraft')

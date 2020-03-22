@@ -37,6 +37,7 @@ if __name__ == '__main__':
     print('me =', me)
     
     you = portfolio(name='Your Comoany')
+    you['Cash'].increase(6)
     print('you =', you)
 
     print()

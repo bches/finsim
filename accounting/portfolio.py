@@ -1,6 +1,6 @@
 from ..accounting.account import account, asset_account, liabilities_account
 from ..accounting.account import equity_account, dividends_account
-from ..accounting.account import expenses_account
+from ..accounting.account import expenses_account, cash_account
 from ..accounting.adjusting_entry import adjusting_entry
 
 
@@ -13,7 +13,7 @@ class portfolio:
     self.accounts = {'Assets':{}, 'Liabilities':{}, 'Equity':{}, 
                      'Revenues':{}, 'Expenses':{}}
     self.all_codes = set({})
-    self.add_asset_category(name='Cash', code=101)
+    self.add_cash_account(code=101)
     self.add_asset_category(name='Accounts Receivable', code=110)
     self.add_liability_category(name='Accounts Payable', code=210)
 
@@ -62,6 +62,13 @@ class portfolio:
     self.accounts['Assets'][name] = asset_account(name, code, activity)
     self.all_codes.add(code)
 
+  def add_cash_account(self, code):
+    name = 'Cash'
+    assert name not in self.accounts['Assets'].keys(), "That asset account already exists"
+    assert code not in self.all_codes, "That code is already being used"
+    self.accounts['Assets'][name] = cash_account(code)
+    self.all_codes.add(code)
+    
   def add_liability_category(self, name, code, activity=None):
     assert name not in self.accounts['Liabilities'].keys(), "That liability account already exists"
     assert code not in self.all_codes, "That code is already being used"

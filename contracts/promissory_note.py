@@ -1,5 +1,6 @@
 from ..contracts.bad_debt import bad_debt
 
+
 class promissory_note(bad_debt):
     '''A promissory note is a short-term loan (less than a year)'''
     def __init__(self, payee, payer, amount, interest_rate, term):
@@ -52,7 +53,8 @@ if __name__ == '__main__':
     you.add_liability_category(name='Interest Payable', code=220)
     
     print('you =', you)
-
+    you['Cash'].increase(6000)
+    
     print()
 
     dut = promissory_note(payee=me, payer=you,
