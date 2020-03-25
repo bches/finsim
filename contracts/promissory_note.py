@@ -18,7 +18,7 @@ class promissory_note(bad_debt):
         self.total_interest = term * self.payment - amount
         self.payee['Interest Receivable'].increase(self.total_interest)
         self.payer['Interest Payable'].increase(self.total_interest)
-        
+
     def __repr__(self):
         s = bad_debt.__repr__(self)
         interest_rate = self.interest_rate
@@ -41,20 +41,20 @@ class promissory_note(bad_debt):
 
 
 if __name__ == '__main__':
-    from ..accounting.portfolio import portfolio
+    from ..accounting.service_provider import service_provider
 
-    me = portfolio(name='My Company')
+    me = service_provider(name='My Company')
     me.add_revenue_category(name='Interest Revenue', code=560)
     me.add_asset_category(name='Interest Receivable', code=160)
     print('me =', me)
-    
-    you = portfolio(name='Your Comoany')
+
+    you = service_provider(name='Your Company')
     you.add_expense_category(name='Interest Expense', code=660)
     you.add_liability_category(name='Interest Payable', code=220)
-    
+
     print('you =', you)
     you['Cash'].increase(6000)
-    
+
     print()
 
     dut = promissory_note(payee=me, payer=you,
@@ -65,7 +65,6 @@ if __name__ == '__main__':
 
     for payment in dut:
         print('Paying...')
-    
+
     print(dut)
     print()
-    

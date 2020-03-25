@@ -1,4 +1,4 @@
-from ..accounting.portfolio import service_provider
+from ..accounting.service_provider import service_provider
 
 # The Big Dog Carworks example comes from the Introduction to Financial
 # Accounting book, which is available at:

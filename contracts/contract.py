@@ -11,7 +11,7 @@ class contract:
         self.balance = amount
         self.payer['Accounts Payable'].increase(amount)
         self.payee['Accounts Receivable'].increase(amount)
-        
+
     def __repr__(self):
         cls = self.__class__.__name__
         payee = self.payee
@@ -31,12 +31,12 @@ class contract:
 
 
 if __name__ == '__main__':
-    from ..accounting.portfolio import portfolio
+    from ..accounting.service_provider import service_provider
 
-    me = portfolio(name='My Company')
+    me = service_provider(name='My Company')
     print('me =', me)
-    
-    you = portfolio(name='Your Comoany')
+
+    you = service_provider(name='Your Comoany')
     you['Cash'].increase(6)
     print('you =', you)
 
@@ -45,8 +45,7 @@ if __name__ == '__main__':
     dut = contract(payee=me, payer=you, amount=12)
     print(dut)
     print()
-    
+
     dut.pay(5)
     print(dut)
     print()
-    

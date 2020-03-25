@@ -1,4 +1,5 @@
-from accounting.account import portfolio
+from ..accounting.portfolio import portfolio
+from ..accounting.account import equity_account
 from ..accounting.adjusting_entry import adjusting_entry
 
 
