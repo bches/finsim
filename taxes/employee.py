@@ -1,4 +1,4 @@
-from individual import individual
+from ..taxes.individual import individual
 
 class employee(individual):
   def __init__(self, name, filing_jointly=True):

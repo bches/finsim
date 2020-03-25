@@ -1,3 +1,6 @@
+from ..taxes.tax_entity import tax_entity
+
+
 class individual(tax_entity):
   def __init__(self, name, filing_jointly=True):
     tax_entity.__init__(self)

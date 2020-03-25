@@ -1,4 +1,4 @@
-from tax_entity import tax_entity
+from ..taxes.tax_entity import tax_entity
 
 class corporation(tax_entity):
   def __init__(self, name):
