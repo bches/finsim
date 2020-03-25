@@ -1,7 +1,7 @@
-from ..contracts.bad_debt import bad_debt
+from ..contracts.contract import contract
 
 
-class promissory_note(bad_debt):
+class promissory_note(contract):
     '''A promissory note is a short-term loan (less than a year)'''
     def __init__(self, payee, payer, amount, interest_rate, term):
         bad_debt.__init__(self, payee, payer, amount)

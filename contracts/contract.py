@@ -29,6 +29,9 @@ class contract:
         self.payee['Accounts Receivable'].decrease(amount)
         self.balance -= amount
 
+    def write_off(self):
+        pass
+    
 
 if __name__ == '__main__':
     from ..accounting.service_provider import service_provider
