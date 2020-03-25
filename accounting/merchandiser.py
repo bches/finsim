@@ -7,6 +7,7 @@ class merchandiser(portfolio):
     def __init__(self, name):
         portfolio.__init__(self, name)
         self.accounts['Sales'] = {}
+        self.accounts['Inventory'] = {}
         self.add_asset_category(name='Accounts Receivable', code=110)
 
     def add_sales_category(self, name, code):

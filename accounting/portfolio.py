@@ -24,6 +24,8 @@ class portfolio:
     return s
 
   def __getitem__(self, i):
+    if i in self.accounts.keys():
+      return i
     for acct in self:
       if type(i) is type(str()):
         if acct.label == i: return acct

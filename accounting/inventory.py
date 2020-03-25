@@ -42,6 +42,13 @@ class inventory:
         self.merchandiser = merchandiser
         self.inventoried = set({})
 
+    def __repr__(self):
+        s = '<%s for %s>:\n' % (self.__class__.__name__,
+                              self.merchandiser.name)
+        for each in self.inventoried:
+            s += '\t%s\n' % each
+        return s
+        
     def __item__(self):
         for i in self.inventoried:
             yield i
