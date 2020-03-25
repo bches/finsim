@@ -1,10 +1,10 @@
-from ..accounting.portfolio import portfolio
+from ..accounting.portfolio import service_provider
 
 # The Big Dog Carworks example comes from the Introduction to Financial
 # Accounting book, which is available at:
 # https://open.umn.edu/opentextbooks/textbooks/215
 
-BigDog = portfolio('Big Dog Carworks Corp.')
+BigDog = service_provider('Big Dog Carworks Corp.')
 
 # transaction 1: Issue 1000 shares for $10000
 BigDog.add_equity()
