@@ -1,5 +1,4 @@
 from ..accounting.account import account, asset_account, liabilities_account
-from ..accounting.account import equity_account, dividends_account
 from ..accounting.account import expenses_account, cash_account
 from ..accounting.adjusting_entry import adjusting_entry
 
@@ -10,8 +9,7 @@ class PortfolioAccountError(Exception):
 class portfolio:
   def __init__(self, name):
     self.name = name
-    self.accounts = {'Assets':{}, 'Liabilities':{}, 'Equity':{}, 
-                     'Expenses':{}}
+    self.accounts = {'Assets':{}, 'Liabilities':{}, 'Expenses':{}}
     self.all_codes = set({})
     self.add_cash_account(code=101)
     self.add_liability_category(name='Accounts Payable', code=210)
@@ -69,19 +67,6 @@ class portfolio:
     assert code not in self.all_codes, "That code is already being used"
     self.accounts['Liabilities'][name] = liabilities_account(name, code, activity)
     self.all_codes.add(code)
-
-  def add_equity(self):
-    self.accounts['Equity']['Share Capital'] = equity_account('Share Capital', 320, activity='Financing')
-    self.accounts['Equity']['Dividends'] = dividends_account('Dividends', 330, activity='Financing')
-    self.all_codes.update({320, 330})
-
-  def allocate_share_capital(self, amount):
-    self.accounts['Assets']['Cash'].increase(amount)
-    self.accounts['Equity']['Share Capital'].increase(amount)
-
-  def allocate_dividends(self, amount):
-    self.accounts['Assets']['Cash'].decrease(amount)
-    self.accounts['Equity']['Dividends'].decrease(amount)
 
   def borrow(self, liability, amount):
     self.accounts['Assets']['Cash'].increase(amount)
