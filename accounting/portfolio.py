@@ -16,26 +16,24 @@ class portfolio:
 
   def __repr__(self):
     s = '<%s %s :\n' % (self.__class__.__name__, self.name)
-    for each in self:
-        s += '%s\n' % each
+    for each in self.accounts.keys():
+        s += '%s\n' % self.accounts[each]
     s += '>'
     return s
 
   def __getitem__(self, i):
     if i in self.accounts.keys():
       return i
-    for acct in self:
-      if type(i) is type(str()):
-        if acct.label == i: return acct
-      if type(i) is type(int()):
-        if acct.code == i: return acct
-    raise PortfolioAccountError('Account %s not found in %s' % (i, self.__class__.__name__))
-  
-  def __iter__(self):
     for acct_type in self.accounts.keys():
       for acct in self.accounts[acct_type].keys():
-        yield self.accounts[acct_type][acct]
-
+          if isinstance(i, str):
+              if self.accounts[acct_type][acct].label == i:
+                return self.accounts[acct_type][acct]
+          if isinstance(i, int):
+              if self.accounts[acct_type][acct].code == i:
+                return self.accounts[acct_type][acct]
+    raise PortfolioAccountError('Account %s not found in %s' % (i, self.__class__.__name__))
+  
   def __contains__(self, acct):
     try:
       self[acct]
