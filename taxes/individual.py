@@ -35,8 +35,8 @@ class individual(tax_entity):
             if annual_wages <= each:
                 break
             i += 1
-        self.rates['income'] = self.brackets['rates'][i]
-        return self.rates['income']*annual_wages
+        self.tax_rates['income'] = self.brackets['rates'][i]
+        return self.tax_rates['income']*annual_wages
 
 
 if __name__ == '__main__':

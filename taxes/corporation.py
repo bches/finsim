@@ -3,21 +3,20 @@ from ..accounting.account import InsufficientFundsError
 from ..accounting.portfolio import portfolio
 
 
-class corporation(tax_entity, portfolio):
+class corporation(portfolio, tax_entity):
     def __init__(self, name):
-        tax_entity.__init__(self, income_tax_rate=0.21)
         portfolio.__init__(self, name)
+        tax_entity.__init__(self, income_tax_rate=0.21)
         self.name = name
         self.payroll = {}
         self.add_expense_category('Salaries Expense', 620)
-        self.add_liabilities_category('Payroll Tax Witholding', 231)
+        self.add_liability_category('Payroll Tax Witholding', 231)
 
     def __repr__(self):
-        cls = self.__class__.__name__
-        rates = self.rates
-        name = self.name
-        return f'<{cls}>:\n{name}\n{rates}\n'
-
+        s = portfolio.__repr__(self)
+        s += str(self.tax_rates)
+        return s
+    
     def add_to_payroll(self, emp, annual_wages):
         self.payroll[emp] = annual_wages
 
@@ -32,15 +31,16 @@ class corporation(tax_entity, portfolio):
     def run_payroll(self, pay_period, tax_period):
         assert 0 < pay_period <= 1.0, 'Pay period must be > 0. and <= 1.'
         assert pay_period < tax_period <= 1.0, 'Tax period must be > pay_period and <= 1.'
-        payroll_taxes = sum([amount for _, amount in self.get_payroll_taxes().items()])
+        payroll_taxes = pay_period * sum([amount for _, amount in self.get_payroll_taxes().items()])
         # make sure there's enough to pay, if not raise InsufficientFundsError
         period_total_salary = 0.
-        for each, pay in self.payroll.items():
+        for each, annual_wage in self.payroll.items():
+            pay = annual_wage * pay_period
             period_total_salary += pay
             # transfer cash to employees
-            each['Cash'].increase(pay)
+            each.pay(net_pay=pay)
         # expense salaries for the period
-        self.accounts['Expenses']['Salaries'].increase(period_total_salary)
+        self.accounts['Expenses']['Salaries Expense'].increase(period_total_salary)
         # increase Payroll Witholding liability
         self.accounts['Liabilities']['Payroll Tax Witholding'].increase(payroll_taxes)
         # transfer Payroll Witholding to tax collecting
@@ -49,6 +49,8 @@ class corporation(tax_entity, portfolio):
 
 
 if __name__ == '__main__':
+    from ..taxes.employee import employee
+    
     dut = corporation(name='My Corp.')
     
     # The employees
@@ -62,8 +64,17 @@ if __name__ == '__main__':
     pay_period = 1.0/12
     tax_period = 1.0/4
 
-    for i in range(4):
-        for j in range(3):
-            dut.run_payroll(pay_period=pay_period,
-                            tax_period=tax_period)
-        
+    dut.run_payroll(pay_period=pay_period,
+                    tax_period=tax_period)
+    print(dut)
+    
+#    for i in range(4):
+#        print("Quarter", i)
+#        for j in range(3):
+#            print("Month", i*4+j)
+#            dut.run_payroll(pay_period=pay_period,
+#                            tax_period=tax_period)
+#            print(dut)
+#            print()
+            
+            
