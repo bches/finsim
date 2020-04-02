@@ -31,18 +31,24 @@ class corporation(portfolio, tax_entity):
     def run_payroll(self, pay_period, tax_period):
         assert 0 < pay_period <= 1.0, 'Pay period must be > 0. and <= 1.'
         assert pay_period < tax_period <= 1.0, 'Tax period must be > pay_period and <= 1.'
-        payroll_taxes = pay_period * sum([amount for _, amount in self.get_payroll_taxes().items()])
+        annual_payroll_taxes = self.get_payroll_taxes()
+        print('annual_payroll_taxes=',annual_payroll_taxes)
+        period_payroll_taxes = pay_period * sum([amount for _, amount in annual_payroll_taxes.items()])
+        print('period_payroll_taxes=',period_payroll_taxes)
         # make sure there's enough to pay, if not raise InsufficientFundsError
-        period_total_salary = 0.
+        salary = pay_period * sum([annual_wage for _, annual_wage in self.payroll.items()])
+        assert (salary + period_payroll_taxes) <= self['Cash'](), 'Cannot make payroll'
+        self['Cash'].decrease(salary)
         for each, annual_wage in self.payroll.items():
-            pay = annual_wage * pay_period
-            period_total_salary += pay
+            print('\t',each.name)
             # transfer cash to employees
-            each.pay(net_pay=pay)
+            net_pay = each.wages(amount=annual_wage)
+            print('\tnet_pay=',net_pay)
+            each.pay(net_pay = pay_period * net_pay['to_employee'])
         # expense salaries for the period
-        self.accounts['Expenses']['Salaries Expense'].increase(period_total_salary)
+        self.accounts['Expenses']['Salaries Expense'].increase(salary)
         # increase Payroll Witholding liability
-        self.accounts['Liabilities']['Payroll Tax Witholding'].increase(payroll_taxes)
+        self.accounts['Liabilities']['Payroll Tax Witholding'].increase(period_payroll_taxes)
         # transfer Payroll Witholding to tax collecting
         #   entity if its time
         return
@@ -64,17 +70,23 @@ if __name__ == '__main__':
     pay_period = 1.0/12
     tax_period = 1.0/4
 
-    dut.run_payroll(pay_period=pay_period,
-                    tax_period=tax_period)
+    try:
+        dut.run_payroll(pay_period=pay_period,
+                        tax_period=tax_period)
+    except AssertionError:
+        print('Correctly caught could not make payroll.')
+
+    dut['Cash'].increase(25000)
     print(dut)
     
-#    for i in range(4):
-#        print("Quarter", i)
-#        for j in range(3):
-#            print("Month", i*4+j)
-#            dut.run_payroll(pay_period=pay_period,
-#                            tax_period=tax_period)
-#            print(dut)
-#            print()
+    for i in range(1):
+        print("Quarter", i)
+        for j in range(3):
+            print("Month", i*4+j+1)
+            dut.run_payroll(pay_period=pay_period,
+                            tax_period=tax_period)
+            print(dut)
+            print(dut.payroll)
+            print()
             
             

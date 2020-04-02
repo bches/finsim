@@ -1,6 +1,9 @@
 class InsufficientFundsError(Exception):
     pass
 
+class MetaAccountError(Exception):
+    pass
+
 
 class account:
     def __init__(self, label, code, activity=None):
@@ -77,6 +80,51 @@ class liabilities_account(account):
 class equity_account(liabilities_account):
     pass
 
+
+class meta_account(account):
+    def __init__(self, name, code, activity=None):
+        self.label = label
+        self.code = code
+        self.activity = activity
+        self.subaccounts = {}
+
+    def __repr__(self):
+        return '{:>{width}} : {}\n\
+        {}\n{}\n'.format(self.label,
+                         self.code, '-'*21,
+                         self.subaccounts)
+
+    def __call__(self):
+        return sum([acct() for acct in self.subaccounts])
+
+    def add_subaccount(self, name):
+        assert isinstance(name, account), "Must be an account"
+        assert name not in self.subaccounts, "That subaccount already exists"
+        self.subaccounts[name] = account(name=name,
+                                         code=self.code,
+                                         activity=self.activity)
+
+    def remove_subaccount(self, name):
+        assert name in self.subaccounts, "Account not found"
+        assert self.subaccounts[name]() == 0, "Balance not 0"
+        self.subaccount.remove(acct)
+
+    def increase(self, name, amount):
+        self.subaccounts[name].increase(amount)
+
+    def decrease(self, name, amount):
+        self.subaccounts[name].decrease(amount)
+
+    def credit(self, name, amount):
+        self.subaccounts[name].credit(amount)
+
+    def debit(self, name, amount):
+        self.subaccount[name].debit(amount)
+
+    def subaccount_balance(self, name):
+        assert name in self.subaccounts, "Not a subaccount"
+        return self.subaccounts[name]()
+    
 
 if __name__ == '__main__':
     cash = asset_account('Cash', 101)
