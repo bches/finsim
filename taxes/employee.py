@@ -1,25 +1,55 @@
 from ..taxes.individual import individual
+from ..taxes.tax_account import tax_account
 
 
-class employee(individual):
-    def __init__(self, name, filing_jointly=True):
-        self.name = name
-        individual.__init__(self, name=name, filing_jointly=filing_jointly)
-        self.add_rate('SS', 0.0620)
-        self.add_rate('Medicare', 0.0145)
+class payroll_tax:
+    def __init__(self, taxing):
+        self.social_security = tax_account(tax_rate=0.062,
+                                           taxing=taxing)
+        self.medicare = tax_account(tax_rate=0.0145,
+                                    taxing=taxing)
 
-    def pay(self, net_pay):
-        self.accounts['Cash'].increase(net_pay)
+    def __repr__(self):
+        s = '%s :\n' % (self.__class__.__name__)
+        s += str(self.social_security)
+        s += str(self.medicare)
+        return s
 
-    def payroll_tax(self, amount, employer_share=0.2):
-        # for 2020 social security witholding maxes out at $137,700
-        return sum([amount * tax for _, tax in self.tax_rates.items()])
+    def incur_tax(self, gross_amount):
+        self.social_security.incur_tax(gross_amount)
+        self.medicare.incur_tax(gross_amount)
 
-    def income_tax_witheld(self, annual_wage, pay_period):
-        assert 0 < pay_period <= 1.0, "Pay period must be > 0 and <= 1"
-        return pay_period * individual.income_tax(self, annual_wage)
+    def pay_tax(self, amount):
+        self.social_security.pay_tax(amount)
+        self.medicare.pay_tax(amount)
+        
 
-      
+class employee(individual, payroll_tax):
+    def __init__(self, name, taxing, filing_jointly=True):
+        individual.__init__(self, name=name, taxing=taxing,
+                            filing_jointly=filing_jointly)
+        payroll_tax.__init__(self, taxing=taxing)
+        self.payroll_tax_income_limit = 137700
+        self.clear_accumulated_wages()
+        
+    def __repr__(self):
+        s = individual.__repr__(self)
+        s += payroll_tax.__repr__(self)
+        return s
+
+    def clear_accumulated_wages(self):
+        self.accumulated_wages = 0
+
+    def gross_pay(self, amount):
+        assert amount > 0, "Amount must be > 0"
+        residue = self.payroll_tax_income_limit - self.accumulated_wages
+        if residue > amount:
+            payroll_tax.incur_tax(self, amount)
+        elif 0 > residue < amount:
+            payroll_tax.incur_tax(self, amount)
+        individual.incur_tax(self, amount)
+        
+        
 class self_employed(employee):
     def __init__(self, name, filing_jointly=True):
         self.name = name
@@ -29,20 +59,17 @@ class self_employed(employee):
 
 
 if __name__ == '__main__':
+    from ..taxes.taxing_entity import taxing_entity
+
+    irs = taxing_entity()
   
-    carol = employee('Carol')
-    david = employee('David', filing_jointly=False)
+    carol = employee('Carol', taxing=irs)
+    david = employee('David', taxing=irs, filing_jointly=False)
     employees = {david: 100000, carol: 24000}
     pay_period = 1./12
     
     for each, annual_wage in employees.items():
-      period_wage = pay_period * annual_wage
-      payroll_tax = each.payroll_tax(period_wage)
-      income_tax_witheld = each.income_tax_witheld(annual_wage,
-                                                   pay_period)
       print(each.name)
-      print('payroll_tax=', payroll_tax)
-      print('income_tax_witheld=', income_tax_witheld)
-      each.pay(period_wage - payroll_tax - income_tax_witheld)
+      each.set_income_tax_rate(annual_wage)
+      each.gross_pay(pay_period * annual_wage)
       print(each)
-      print()

@@ -1,9 +1,9 @@
-from ..taxes.tax_entity import tax_entity
+from ..taxes.tax_account import tax_account
 
 
-class individual(tax_entity):
-    def __init__(self, name, filing_jointly=True):
-        tax_entity.__init__(self)
+class individual(tax_account):
+    def __init__(self, name, taxing, filing_jointly=True):
+        tax_account.__init__(self, tax_rate=0, taxing=taxing)
         self.name = name
         self.set_filing(filing_jointly)
         # 2020 tables - https://www.irs.gov/pub/irs-pdf/p15t.pdf
@@ -18,17 +18,16 @@ class individual(tax_entity):
 
     def __repr__(self):
         cls = self.__class__.__name__
-        rates = self.tax_rates
-        accounts = self.accounts
         name = self.name
         filing = self.filing_jointly
-        return f'<{cls} {name}>:\n{rates}\n{accounts}\nfiling_jointly={filing}'
+        acct = tax_account.__repr__(self)
+        return f'<{cls} {name}>:\n{acct}\nfiling_jointly={filing}'
 
     def set_filing(self, filing_jointly):
         assert isinstance(filing_jointly, bool), 'filing_jointly needs to be boolean'
         self.filing_jointly = filing_jointly
 
-    def income_tax(self, annual_wages):
+    def set_income_tax_rate(self, annual_wages):
         i = 0
         if self.filing_jointly:
             filing = 'jointly'
@@ -38,16 +37,21 @@ class individual(tax_entity):
             if annual_wages <= each:
                 break
             i += 1
-        self.tax_rates['income'] = self.brackets['rates'][i]
-        return self.tax_rates['income']*annual_wages
+        self.tax_rate = self.brackets['rates'][i]
+        return self.tax_rate
 
 
 if __name__ == '__main__':
-    alice = individual(name='Alice', filing_jointly=False)
-    bob = individual(name='Bob')
+    from ..taxes.taxing_entity import taxing_entity
 
-    print(alice)
-    print(bob)
+    irs = taxing_entity()
+    alice = individual(name='Alice',
+                       taxing=irs,
+                       filing_jointly=False)
+    bob = individual(name='Bob',
+                     taxing=irs)
 
-    print('monthly income_tax=', alice.income_tax(annual_wages=24000)/12.)
+    alice.set_income_tax_rate(24000)
+    alice.incur_tax(24000/12.)
+    alice.pay_tax(210)
     print(alice)

@@ -97,12 +97,10 @@ class meta_account(account):
     def __call__(self):
         return sum([acct() for acct in self.subaccounts])
 
-    def add_subaccount(self, name):
-        assert isinstance(name, account), "Must be an account"
-        assert name not in self.subaccounts, "That subaccount already exists"
-        self.subaccounts[name] = account(name=name,
-                                         code=self.code,
-                                         activity=self.activity)
+    def add_subaccount(self, acct):
+        assert isinstance(acct, account), "Must be an account"
+        assert acct.label not in self.subaccounts, "That subaccount already exists"
+        self.subaccounts[acct.label] = acct
 
     def remove_subaccount(self, name):
         assert name in self.subaccounts, "Account not found"
