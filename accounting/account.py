@@ -10,16 +10,15 @@ class account:
         self.label = label
         self.code = code
         self.activity = activity
-        self._cr = [0]
-        self._dr = [0]
-
+        self.zero()
+        
     def __repr__(self):
         return '{:>{width}} : {}\n\
-        {}\n{:{prec}}|{:{prec}}\n'.format(self.label,
-                                          self.code, '-'*21,
-                                          sum(self._dr),
-                                          sum(self._cr),
-                                          width=10, prec=10)
+{}\n{:{prec}}|{:{prec}}\n'.format(self.label,
+                                  self.code, '-'*21,
+                                  sum(self._dr),
+                                  sum(self._cr),
+                                  width=10, prec=10)
 
     def debit(self, amount):
         assert amount >= 0, "Debit amount must be >= 0"
@@ -29,6 +28,10 @@ class account:
         assert amount >= 0, "Credit amount must be >= 0"
         self._cr += [amount]
 
+    def zero(self):
+        self._cr = [0]
+        self._dr = [0]
+    
 
 class asset_account(account):
     def __call__(self):
