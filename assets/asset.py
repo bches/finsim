@@ -32,15 +32,23 @@ class asset(account):
     def balance(self):
         return self(), 0
 
-    def sell(self, _to, amount):
-        self.historical_cost = amount
-        self.owner = _to
-        self.date_acquired = datetime.today()
-        
+    def sell(self, _to, selling_price):
+        selling_date =  datetime.today()
+        if self.date_acquired != None:
+            holding_period = selling_date - self.date_acquired
+        self.date_acquired = selling_date
+        self.historical_cost = selling_price
+        self.owner = _to        
+        self.zero()
+        self.debit(selling_price)
+        # create a tax liability
+        # if holding_period < 1 year:
+        #  return tax_liability(selling_price, historical_cost, accumulated_depreciation)
+        # else:
+        # return s1231(selling_price, historical_cost, accumulated_depreciation)
 
-        
 if __name__ == '__main__':
     dut = asset(label='test', code=999)
-    dut.sell(_to='me', amount=1000.0)
+    dut.sell(_to='me', selling_price=1000.0)
     print(dut)
         
