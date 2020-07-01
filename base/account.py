@@ -57,7 +57,7 @@ class expenses_account(asset_account):
     pass
 
 
-class liabilities_account(account):
+class liability_account(account):
     def __call__(self):
         return sum(self._cr) - sum(self._dr)
 
@@ -71,7 +71,7 @@ class liabilities_account(account):
         return 0, self.net()
 
 
-class equity_account(liabilities_account):
+class equity_account(liability_account):
     pass
 
 
