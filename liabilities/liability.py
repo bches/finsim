@@ -44,22 +44,5 @@ class tax_liability(liability):
         return liability.pay(self, _to=self.taxing_entity, amount=amount)
         
         
-class s1231(tax_liability):
-    pass
-
-
-class s1245(s1231):
-    def recapture(self):
-        pass
-
-    
-class s1250(s1231):
-    def recapture(self):
-        pass
-
-    def unrecapture(self):
-        pass
-
-
 if __name__ == '__main__':
     pass
