@@ -6,6 +6,8 @@ class asset(asset_account):
     def __init__(self, historical_cost=None, owner=None, date_acquired=None):
         asset_account.__init__(self)
         self.historical_cost = historical_cost
+        if historical_cost > 0:
+            self.debit(historical_cost)
         self.owner = owner
         self.date_acquired = date_acquired
 
@@ -14,7 +16,7 @@ class asset(asset_account):
         s += 'owner = %s,\n' % self.owner
         s += 'historical_cost = %s,\n' % self.historical_cost
         s += 'date_acquired = %s,\n' % self.date_acquired
-        return s + asset_account.__repr__(self)
+        return s + 'account =\n' + asset_account.__repr__(self) + '>'
         
     def __add__(self, other):
         assert isinstance(other, asset), "Must add asset to another asset"
@@ -27,18 +29,17 @@ class asset(asset_account):
         if self.date_acquired != None:
             holding_period = selling_date - self.date_acquired
         self.date_acquired = selling_date
+        gain = selling_price - self.historical_cost
         self.historical_cost = selling_price
         self.owner = _to        
         self.zero()
         self.debit(selling_price)
-        # create a tax gain or loss
-        # if holding_period < 1 year:
-        #  return tax_liability(selling_price, historical_cost, accumulated_depreciation)
-        # else:
-        # return s1231(selling_price, historical_cost, accumulated_depreciation)
+        return holding_period, gain
+    
 
 if __name__ == '__main__':
-    dut = asset(historical_cost=500.0, owner='me', date_acquired=datetime.today())
+    dut = asset(historical_cost=500.0, owner='me',
+                date_acquired=datetime.today())
     print(dut)
     print()
     print('Selling to you...')

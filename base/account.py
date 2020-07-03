@@ -7,9 +7,10 @@ class account:
         self.zero()
         
     def __repr__(self):
-        return '{:{prec}}|{:{prec}}\n'.format(sum(self._dr),
-                                              sum(self._cr),
-                                              prec=10)
+        return '{:>{prec}}|{:>{prec}}\n{:{prec}}|{:{prec}}\n'.format('Dr','Cr',
+                                                                     sum(self._dr),
+                                                                     sum(self._cr),
+                                                                     prec=10)
 
     def debit(self, amount):
         assert amount >= 0, "Debit amount must be >= 0"
