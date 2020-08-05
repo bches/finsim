@@ -7,7 +7,7 @@ class individual(tax_account):
         self.name = name
         self.set_filing(filing_jointly)
         # 2020 tables - https://www.irs.gov/pub/irs-pdf/p15t.pdf
-        self.brackets = {'rates': [0.0, 0.10, 0.12, 0.22, 0.24,
+        self.brackets = {'rates': [0.0, 0.12, 0.22, 0.24,
                                    0.32, 0.35, 0.37],
                          'income': {'single': [0, 9875, 40125,
                                                85525, 163300,
